@@ -2,13 +2,11 @@ package com.mycompany.training;
 
 import com.mongodb.*;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
-import com.mongodb.client.model.UpdateOptions;
 import com.mycompany.training.thrift.SessionInfo;
 import com.mycompany.training.thrift.UserInfo;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.thrift.async.AsyncMethodCallback;
-import org.eclipse.jetty.server.session.Session;
 
 import java.util.UUID;
 
@@ -88,11 +86,11 @@ public class MongoConnector {
     }
 
     public UserInfo getUserBySession(String sessionId) {
-//        System.out.println("sessionId " + sessionId);
-//        try {
-//            Thread.sleep(10000);
-//        } catch (Exception e) {
-//        }
+        System.out.println("sessionId " + sessionId);
+        try {
+            Thread.sleep(5000);
+        } catch (Exception e) {
+        }
         SessionInfo sessionInfo = checkSessionId(sessionId);
         if (sessionInfo == null) {
             return null;

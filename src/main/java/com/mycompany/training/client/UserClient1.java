@@ -27,7 +27,7 @@ public class UserClient1 {
 //        System.out.printf("get user info : " + result.toString());
 
         ResponseData result = client.getUserBySession("457a8235-7820-483d-8a74-e8dbc6b13b50");
-        System.out.printf("get userBySessionID : " + result.toString());
+        System.out.println("get userBySessionID : " + result.toString());
 
 //        UserInfo userInfo = new UserInfo("khoinguyen1", "Khoi Nguyen", "HCM District.7", 23);
 //        boolean result = client.update(userInfo);

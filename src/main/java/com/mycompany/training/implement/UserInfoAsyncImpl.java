@@ -12,8 +12,10 @@ public class UserInfoAsyncImpl implements UserManager.AsyncIface {
 
 
     @Override
-    public void createUser(UserInfo userInfo, String password,  AsyncMethodCallback<ResponseData> resultHandler) throws TException {
-
+    public void createUser(UserInfo userInfo, String password, AsyncMethodCallback<ResponseData> resultHandler) throws TException {
+        ResponseData responseData = new ResponseData();
+        responseData.setErrorDesc("Success");
+        resultHandler.onComplete(responseData);
     }
 
     @Override
