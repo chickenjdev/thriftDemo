@@ -1,7 +1,6 @@
-package com.mycompany.training;
+package com.mycompany.training.client;
 
 import com.mycompany.training.thrift.ResponseData;
-import com.mycompany.training.thrift.UserInfo;
 import com.mycompany.training.thrift.UserManager;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -21,21 +20,21 @@ public class UserClient {
 //        boolean result = client.createUser(userInfo.getUsername(),"123123", userInfo);
 //        System.out.printf("create new user : " + result);
 
-//        String result = client.login("khoinguyen1","123123");
-//        System.out.printf("result login : " + result);
+        ResponseData result = client.login("khoinguyen1","123123");
+        System.out.printf("result login : " + result);
 
 //        ResponseData result = client.getInfo("khoinguyen1");
 //        System.out.printf("get user info : " + result.toString());
 
-//        ResponseData result = client.getUserBySession("05b20f45-8de2-4333-b973-1cf8787eb372");
+//        ResponseData result = client.getUserBySession("78821a9f-6ef8-4c51-bcd1-fda4b9693a39");
 //        System.out.printf("get userBySessionID : " + result.toString());
 
 //        UserInfo userInfo = new UserInfo("khoinguyen1", "Khoi Nguyen", "HCM District.7", 23);
 //        boolean result = client.update(userInfo);
 //        System.out.printf("update user info result : " + result);
 
-        boolean result = client.logout("khoinguyen1");
-        System.out.printf("logout user result : " + result);
+//        boolean result = client.logout("khoinguyen1");
+//        System.out.printf("logout user result : " + result);
 
         transport.close();
     }

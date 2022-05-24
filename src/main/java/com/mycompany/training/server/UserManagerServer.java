@@ -1,6 +1,6 @@
-package com.mycompany.training;
+package com.mycompany.training.server;
 
-import com.mycompany.training.thrift.UserInfoImpl;
+import com.mycompany.training.implement.UserInfoImpl;
 import com.mycompany.training.thrift.UserManager;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;

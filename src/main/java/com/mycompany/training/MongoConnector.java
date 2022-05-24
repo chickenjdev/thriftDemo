@@ -3,9 +3,12 @@ package com.mycompany.training;
 import com.mongodb.*;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
 import com.mongodb.client.model.UpdateOptions;
+import com.mycompany.training.thrift.SessionInfo;
 import com.mycompany.training.thrift.UserInfo;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.apache.thrift.async.AsyncMethodCallback;
+import org.eclipse.jetty.server.session.Session;
 
 import java.util.UUID;
 
@@ -23,7 +26,7 @@ public class MongoConnector {
         session = database.getCollection("sessions");
     }
 
-    public String login(String username, String password) {
+    public UserInfo login(String username, String password) {
         JsonArray arrUserInfo = new JsonArray();
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("username", username);
@@ -37,10 +40,11 @@ public class MongoConnector {
         if (arrUserInfo.isEmpty()) {
             return null;
         }
-        return createSessionUser(username);
+        return getUserBySession(createSessionUser(username).getSessionId());
     }
 
-    protected String createSessionUser(String username) {
+    protected SessionInfo createSessionUser(String username) {
+        SessionInfo sessionInfo = new SessionInfo();
         String sessionId = String.valueOf(UUID.randomUUID());
 
         BasicDBObject query = new BasicDBObject();
@@ -48,6 +52,7 @@ public class MongoConnector {
 
         BasicDBObject newDocument = new BasicDBObject();
         newDocument.put("sessionId", sessionId);
+        newDocument.put("expireTime", System.currentTimeMillis() + 60 * 60 * 60);
 
         BasicDBObject updateObject = new BasicDBObject();
         updateObject.put("$set", newDocument);
@@ -57,7 +62,7 @@ public class MongoConnector {
             WriteResult writeResult = session.update(query, updateObject, options);
             System.out.println("createSessionUser result :" + newDocument.toJson() + ":" + writeResult.wasAcknowledged());
             if (writeResult.wasAcknowledged()) {
-                return sessionId;
+                return JsonObject.mapFrom(newDocument).mapTo(SessionInfo.class);
             }
             return null;
         } catch (Exception e) {
@@ -66,7 +71,7 @@ public class MongoConnector {
         }
     }
 
-    protected String checkSessionId(String sessionId) {
+    protected SessionInfo checkSessionId(String sessionId) {
         JsonArray arrUserInfo = new JsonArray();
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("sessionId", sessionId);
@@ -79,18 +84,23 @@ public class MongoConnector {
         if (arrUserInfo.isEmpty()) {
             return null;
         }
-        return arrUserInfo.getJsonObject(0).getString("username");
+        return arrUserInfo.getJsonObject(0).mapTo(SessionInfo.class);
     }
 
-    public JsonObject getUserBySession(String sessionId) {
-        String username = checkSessionId(sessionId);
-        if (username == null || username.isEmpty()) {
+    public UserInfo getUserBySession(String sessionId) {
+//        System.out.println("sessionId " + sessionId);
+//        try {
+//            Thread.sleep(10000);
+//        } catch (Exception e) {
+//        }
+        SessionInfo sessionInfo = checkSessionId(sessionId);
+        if (sessionInfo == null) {
             return null;
         }
-        return readData(username, "");
+        return readData(sessionInfo.getUsername(), "").setSessionInfo(sessionInfo);
     }
 
-    public JsonObject readData(String username, String password) {
+    public UserInfo readData(String username, String password) {
         JsonArray arrUserInfo = new JsonArray();
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("username", username);
@@ -105,7 +115,24 @@ public class MongoConnector {
         if (arrUserInfo.isEmpty()) {
             return null;
         }
-        return arrUserInfo.getJsonObject(0);
+        return arrUserInfo.getJsonObject(0).mapTo(UserInfo.class);
+    }
+
+    public void insertDataAsync(String username, String password, UserInfo userInfo, AsyncMethodCallback<Boolean> resultHandler) {
+        BasicDBObject document = new BasicDBObject();
+        document.put("username", username);
+        document.put("password", password);
+        document.put("name", userInfo.getName());
+        document.put("address", userInfo.getAddress());
+        document.put("age", userInfo.getAge());
+        try {
+            WriteResult writeResult = collection.insert(document);
+            System.out.println("insertDataAsync result :" + document.toJson() + ":" + writeResult.wasAcknowledged());
+            resultHandler.onComplete(true);
+        } catch (Exception e) {
+            System.out.println("insertDataAsync result :" + document.toJson() + ":" + false);
+            resultHandler.onComplete(false);
+        }
     }
 
     public boolean insertData(String username, String password, UserInfo userInfo) {
@@ -142,7 +169,7 @@ public class MongoConnector {
         return writeResult.wasAcknowledged();
     }
 
-    public boolean logout(String username){
+    public boolean logout(String username) {
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("username", username);
         WriteResult writeResult = session.remove(searchQuery);
