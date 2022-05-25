@@ -27,12 +27,4 @@ public class UMThreadPoolServer {
     public static void main(String[] args) throws TTransportException {
         new UMThreadPoolServer();
     }
-    /**
-     * TSimpleServer : testing, single thread, blocking IO
-     * TNonblockingServer : single thread, non-blocking IO
-     * TThreadPoolServer : multi thread, non-blocking IO
-     * Đề xuất sử dụng TThreadPoolServer cho server production, vì có thể xử lý đồng thời nhiều request cùng 1 lúc,
-     * các request vào server ko chờ nhau để xử lý.
-     *
-     */
 }

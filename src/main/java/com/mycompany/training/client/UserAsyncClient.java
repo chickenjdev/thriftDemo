@@ -1,5 +1,6 @@
 package com.mycompany.training.client;
 
+
 import com.mycompany.training.thrift.ResponseData;
 import com.mycompany.training.thrift.UserManager;
 import org.apache.thrift.TException;
@@ -13,7 +14,6 @@ import java.io.IOException;
 
 public class UserAsyncClient {
     public UserAsyncClient(String sessionId) throws TException, IOException {
-
         TSocket socket = new TSocket("localhost", 3031, 30000);
         TTransport framedTransport = new TFramedTransport(socket);
         framedTransport.open();
@@ -22,8 +22,10 @@ public class UserAsyncClient {
         UserManager.Client client = new UserManager.Client(protocol);
         new Thread(() -> {
             try {
-                ResponseData result = client.getUserBySession(sessionId);
-                System.out.println("get userBySessionID : " + result.toString());
+                for (int i = 0; i < 50; i++) {
+                    ResponseData result = client.getUserBySession(sessionId);
+                    System.out.println("get userBySessionID : " + result.toString());
+                }
             } catch (TException e) {
                 throw new RuntimeException(e);
             }
@@ -34,7 +36,7 @@ public class UserAsyncClient {
         String[] arr = new String[]{
                 "1334eaa5-9679-4d0e-8b81-6d36895ec774",
                 "4802c84c-240f-4352-9b62-7b557489ce8a",};
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             new UserAsyncClient(arr[i%2]);
         }
 
