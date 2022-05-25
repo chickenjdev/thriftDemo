@@ -38,7 +38,6 @@ public class UserInfoImpl implements UserManager.Iface {
         responseData.setSessionInfo(sessionInfo);
         return responseData;
     }
-
     @Override
     public ResponseData logout(String username) throws TException {
         ResponseData responseData = new ResponseData();

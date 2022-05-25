@@ -87,10 +87,10 @@ public class MongoConnector {
 
     public UserInfo getUserBySession(String sessionId) {
         System.out.println("sessionId " + sessionId);
-//        try {
-//            Thread.sleep(5000);
-//        } catch (Exception e) {
-//        }
+        try {
+            Thread.sleep(5000);
+        } catch (Exception e) {
+        }
         SessionInfo sessionInfo = checkSessionId(sessionId);
         if (sessionInfo == null) {
             return null;
