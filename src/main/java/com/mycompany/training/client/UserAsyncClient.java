@@ -34,7 +34,7 @@ public class UserAsyncClient {
         String[] arr = new String[]{
                 "1334eaa5-9679-4d0e-8b81-6d36895ec774",
                 "4802c84c-240f-4352-9b62-7b557489ce8a",};
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < 10; i++) {
             new UserAsyncClient(arr[i%2]);
         }
 
