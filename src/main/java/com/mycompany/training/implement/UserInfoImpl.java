@@ -20,7 +20,10 @@ public class UserInfoImpl implements UserManager.Iface {
             }
             responseData.setError(0);
             responseData.setErrorDesc("Success");
+            return responseData;
         }
+        responseData.setError(-77);
+        responseData.setErrorDesc("create new user failed");
         return responseData;
     }
 

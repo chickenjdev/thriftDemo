@@ -6,7 +6,6 @@ import com.mycompany.training.thrift.SessionInfo;
 import com.mycompany.training.thrift.UserInfo;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.apache.thrift.async.AsyncMethodCallback;
 
 import java.util.UUID;
 
@@ -114,23 +113,6 @@ public class MongoConnector {
             return null;
         }
         return arrUserInfo.getJsonObject(0).mapTo(UserInfo.class);
-    }
-
-    public void insertDataAsync(String username, String password, UserInfo userInfo, AsyncMethodCallback<Boolean> resultHandler) {
-        BasicDBObject document = new BasicDBObject();
-        document.put("username", username);
-        document.put("password", password);
-        document.put("name", userInfo.getName());
-        document.put("address", userInfo.getAddress());
-        document.put("age", userInfo.getAge());
-        try {
-            WriteResult writeResult = collection.insert(document);
-            System.out.println("insertDataAsync result :" + document.toJson() + ":" + writeResult.wasAcknowledged());
-            resultHandler.onComplete(true);
-        } catch (Exception e) {
-            System.out.println("insertDataAsync result :" + document.toJson() + ":" + false);
-            resultHandler.onComplete(false);
-        }
     }
 
     public boolean insertData(String username, String password, UserInfo userInfo) {

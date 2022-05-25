@@ -2,12 +2,12 @@ package com.mycompany.training.server;
 
 import com.mycompany.training.implement.UserInfoImpl;
 import com.mycompany.training.thrift.UserManager;
-import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.server.*;
-import org.apache.thrift.transport.*;
+import org.apache.thrift.server.TServer;
+import org.apache.thrift.server.TThreadPoolServer;
+import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.TTransportException;
 import org.apache.thrift.transport.layered.TFramedTransport;
 
 public class UMNonBlockingServer {
