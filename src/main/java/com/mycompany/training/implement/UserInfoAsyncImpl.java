@@ -10,7 +10,6 @@ import org.apache.thrift.async.AsyncMethodCallback;
 public class UserInfoAsyncImpl implements UserManager.AsyncIface {
     MongoConnector mongoConnector = new MongoConnector();
 
-
     @Override
     public void createUser(UserInfo userInfo, String password, AsyncMethodCallback<ResponseData> resultHandler) throws TException {
         ResponseData responseData = new ResponseData();

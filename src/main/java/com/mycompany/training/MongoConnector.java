@@ -23,7 +23,7 @@ public class MongoConnector {
         session = database.getCollection("sessions");
     }
 
-    public UserInfo login(String username, String password) {
+    public JsonObject login(String username, String password) {
         JsonArray arrUserInfo = new JsonArray();
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("username", username);
@@ -37,7 +37,8 @@ public class MongoConnector {
         if (arrUserInfo.isEmpty()) {
             return null;
         }
-        return getUserBySession(createSessionUser(username).getSessionId());
+        SessionInfo sessionInfo = createSessionUser(username);
+        return new JsonObject().put("userInfo", JsonObject.mapFrom(getUserBySession(sessionInfo.getSessionId()))).put("sessionInfo", JsonObject.mapFrom(sessionInfo));
     }
 
     protected SessionInfo createSessionUser(String username) {
@@ -86,15 +87,15 @@ public class MongoConnector {
 
     public UserInfo getUserBySession(String sessionId) {
         System.out.println("sessionId " + sessionId);
-        try {
-            Thread.sleep(5000);
-        } catch (Exception e) {
-        }
+//        try {
+//            Thread.sleep(5000);
+//        } catch (Exception e) {
+//        }
         SessionInfo sessionInfo = checkSessionId(sessionId);
         if (sessionInfo == null) {
             return null;
         }
-        return readData(sessionInfo.getUsername(), "").setSessionInfo(sessionInfo);
+        return readData(sessionInfo.getUsername(), "");
     }
 
     public UserInfo readData(String username, String password) {

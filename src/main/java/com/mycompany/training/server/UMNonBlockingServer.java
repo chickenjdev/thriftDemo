@@ -27,4 +27,8 @@ public class UMNonBlockingServer {
     public static void main(String[] args) throws TTransportException {
         new UMNonBlockingServer();
     }
+    /**
+     * TSimpleServer : testing, single thread, blocking
+     * TNonblockingServer :
+     */
 }
