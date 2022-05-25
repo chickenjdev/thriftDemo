@@ -30,12 +30,12 @@ public class UserClient {
 //        ResponseData result = client.getUserBySession("4e547a5f-235b-4da4-ad45-53d015b1be44");
 //        System.out.println("get userBySessionID : " + result.toString());
 //
-        UserInfo userInfo = new UserInfo("khoinguyen1", "Khoi Nguyen 1", "HCM District.7", 23, null);
-        ResponseData result = client.update(userInfo);
-        System.out.printf("update user info result : " + result);
+//        UserInfo userInfo = new UserInfo("khoinguyen1", "Khoi Nguyen 1", "HCM District.7", 23, null);
+//        ResponseData result = client.update(userInfo);
+//        System.out.printf("update user info result : " + result);
 //
-//        boolean result = client.logout("khoinguyen1");
-//        System.out.printf("logout user result : " + result);
+        ResponseData result = client.logout("khoinguyen1");
+        System.out.printf("logout user result : " + result);
 
         transport.close();
     }

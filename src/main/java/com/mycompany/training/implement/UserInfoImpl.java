@@ -47,6 +47,8 @@ public class UserInfoImpl implements UserManager.Iface {
     public ResponseData logout(String username) throws TException {
         ResponseData responseData = new ResponseData();
         mongoConnector.logout(username);
+        responseData.setError(0);
+        responseData.setErrorDesc("Success");
         return responseData;
     }
 
