@@ -13,11 +13,13 @@ public class UserInfoImpl implements UserManager.Iface {
     public ResponseData createUser(UserInfo userInfo, String password) {
         ResponseData responseData = new ResponseData();
         if (mongoConnector.insertData(userInfo.getUsername(), password, userInfo)){
-            if (mongoConnector.login(userInfo.getUsername(), password) == null){
+            UserInfo createdUserInfo = mongoConnector.login(userInfo.getUsername(), password);
+            if (createdUserInfo == null){
                 responseData.setError(-67);
                 responseData.setErrorDesc("User not found");
                 return responseData;
             }
+            responseData.setUserInfo(createdUserInfo);
             responseData.setError(0);
             responseData.setErrorDesc("Success");
             return responseData;
@@ -81,7 +83,15 @@ public class UserInfoImpl implements UserManager.Iface {
     @Override
     public ResponseData update(UserInfo userInfo) {
         ResponseData responseData = new ResponseData();
-        mongoConnector.updateData(userInfo.getUsername(), userInfo.getName(), userInfo.getAddress(), userInfo.getAge());
+        boolean update = mongoConnector.updateData(userInfo.getUsername(), userInfo.getName(), userInfo.getAddress(), userInfo.getAge());
+        if (!update){
+            responseData.setError(-68);
+            responseData.setErrorDesc("Update failed");
+            return responseData;
+        }
+        responseData.setUserInfo(userInfo);
+        responseData.setError(0);
+        responseData.setErrorDesc("Success");
         return responseData;
     }
 
