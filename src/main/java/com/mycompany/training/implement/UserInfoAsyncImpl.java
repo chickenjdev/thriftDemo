@@ -1,6 +1,6 @@
 package com.mycompany.training.implement;
 
-import com.mycompany.training.MongoConnector;
+import com.mycompany.training.db.MongoConnector;
 import com.mycompany.training.thrift.ResponseData;
 import com.mycompany.training.thrift.UserInfo;
 import com.mycompany.training.thrift.UserManager;
@@ -39,6 +39,11 @@ public class UserInfoAsyncImpl implements UserManager.AsyncIface {
 
     @Override
     public void update(UserInfo userInfo, AsyncMethodCallback<ResponseData> resultHandler) throws TException {
+
+    }
+
+    @Override
+    public void getSessionInfo(String sessionId, AsyncMethodCallback<ResponseData> resultHandler) throws TException {
 
     }
 }

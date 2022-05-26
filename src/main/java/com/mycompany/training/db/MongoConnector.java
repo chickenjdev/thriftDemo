@@ -1,4 +1,4 @@
-package com.mycompany.training;
+package com.mycompany.training.db;
 
 import com.mongodb.*;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
@@ -35,7 +35,7 @@ public class MongoConnector {
         }
         System.out.println("login result query :" + (arrUserInfo.size() != 0));
         if (arrUserInfo.isEmpty()) {
-            return null;
+            return new JsonObject();
         }
         SessionInfo sessionInfo = createSessionUser(username);
         return new JsonObject().put("userInfo", JsonObject.mapFrom(getUserBySession(sessionInfo.getSessionId()))).put("sessionInfo", JsonObject.mapFrom(sessionInfo));
@@ -69,7 +69,7 @@ public class MongoConnector {
         }
     }
 
-    protected SessionInfo checkSessionId(String sessionId) {
+    public SessionInfo checkSessionId(String sessionId) {
         JsonArray arrUserInfo = new JsonArray();
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("sessionId", sessionId);

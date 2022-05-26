@@ -15,7 +15,9 @@ service UserManager {
 
    responseData.ResponseData getInfo(1:string username),
 
-   responseData.ResponseData update(1:userInfo.UserInfo userInfo)
+   responseData.ResponseData update(1:userInfo.UserInfo userInfo),
+
+   responseData.ResponseData getSessionInfo(1:string sessionId)
 
 }
 

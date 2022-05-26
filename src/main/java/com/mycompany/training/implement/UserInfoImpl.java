@@ -1,6 +1,6 @@
 package com.mycompany.training.implement;
 
-import com.mycompany.training.MongoConnector;
+import com.mycompany.training.db.MongoConnector;
 import com.mycompany.training.thrift.ResponseData;
 import com.mycompany.training.thrift.SessionInfo;
 import com.mycompany.training.thrift.UserInfo;
@@ -25,7 +25,12 @@ public class UserInfoImpl implements UserManager.Iface {
     @Override
     public ResponseData login(String username, String password) {
         ResponseData responseData = new ResponseData();
-        JsonObject loginResult = mongoConnector.login(username, password);;
+        JsonObject loginResult = mongoConnector.login(username, password);
+        if (loginResult == null || loginResult.isEmpty()) {
+            responseData.setError(-67);
+            responseData.setErrorDesc("User not found");
+            return responseData;
+        }
         UserInfo userInfo = loginResult.getJsonObject("userInfo").mapTo(UserInfo.class);
         SessionInfo sessionInfo = loginResult.getJsonObject("sessionInfo").mapTo(SessionInfo.class);
         if (userInfo == null) {
@@ -90,6 +95,22 @@ public class UserInfoImpl implements UserManager.Iface {
         responseData.setError(0);
         responseData.setErrorDesc("Success");
         return responseData;
+    }
+
+    @Override
+    public ResponseData getSessionInfo(String sessionId) throws TException {
+        ResponseData responseData = new ResponseData();
+        SessionInfo sessionInfo = mongoConnector.checkSessionId(sessionId);
+        if (sessionInfo == null) {
+            responseData.setError(-67);
+            responseData.setErrorDesc("User not found");
+            return responseData;
+        }
+        responseData.setSessionInfo(sessionInfo);
+        responseData.setError(0);
+        responseData.setErrorDesc("Success");
+        return responseData;
+
     }
 
 }
