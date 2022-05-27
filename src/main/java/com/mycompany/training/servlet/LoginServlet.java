@@ -31,6 +31,10 @@ public class LoginServlet extends HttpServlet {
             if (responseData.getSessionInfo() != null) {
                 response.addHeader("session-id", responseData.getSessionInfo().getSessionId());
                 response.addHeader("session-expire", String.valueOf(responseData.getSessionInfo().getExpireTime()));
+                response.addHeader("Access-Control-Allow-Origin", "*");
+                response.addHeader("Access-Control-Allow-Credentials", "true");
+                response.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+                response.addHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
             }
             JsonObject resBody = JsonObject.mapFrom(responseData);
             ByteBuffer content = ByteBuffer.wrap(String.valueOf(resBody).getBytes(StandardCharsets.UTF_8));
