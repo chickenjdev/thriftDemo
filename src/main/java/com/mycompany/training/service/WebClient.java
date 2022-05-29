@@ -64,9 +64,12 @@ public class WebClient extends AbstractVerticle {
 
 
     public WebClient() {
-    }
 
-    public static void main(String[] args) {
+    }
+    public void startServer(){
         Vertx.vertx().deployVerticle(WebClient.class.getName());
+    }
+    public static void main(String[] args) {
+
     }
 }
