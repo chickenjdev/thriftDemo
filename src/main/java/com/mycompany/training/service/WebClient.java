@@ -1,5 +1,6 @@
 package com.mycompany.training.service;
 
+import com.mashape.unirest.http.HttpResponse;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -49,6 +50,13 @@ public class WebClient extends AbstractVerticle {
             });
         });
 
+        router.post("/update").handler(routingContext -> {
+            routingContext.request().bodyHandler(bh -> {
+                System.out.println(bh.toJsonObject());
+                update(routingContext, bh);
+            });
+        });
+
         server.requestHandler(router).listen(8089);
         startPromise.complete();
     }
@@ -56,8 +64,23 @@ public class WebClient extends AbstractVerticle {
     private void login(RoutingContext context, Buffer bh) {
         HttpServerResponse response = context.response();
         JsonObject jo = bh.toJsonObject().getJsonObject("loginJson");
-        JsonObject res = new JsonObject(clientUtil.call("/login", jo));
+        HttpResponse<String> responseCall = clientUtil.call("/login", jo, null);
+        JsonObject res = new JsonObject(responseCall.getBody());
         System.out.println("login called");
+        response.putHeader("Content-Type","application/json");
+        response.putHeader("session-id", responseCall.getHeaders().get("session-id"));
+        response.end(res.encode());
+    }
+
+    private void update(RoutingContext context, Buffer bh) {
+        HttpServerResponse response = context.response();
+        JsonObject joUpdate = new JsonObject();
+        joUpdate.put("type", "UPDATE");
+        JsonObject jo = bh.toJsonObject().getJsonObject("loginJson");
+        joUpdate.put("userData", jo);
+        HttpResponse<String> responseCall = clientUtil.call("/user", joUpdate, jo.getString("sessionId"));
+        JsonObject res = new JsonObject(responseCall.getBody());
+        System.out.println("update called");
         response.putHeader("Content-Type","application/json");
         response.end(res.encode());
     }

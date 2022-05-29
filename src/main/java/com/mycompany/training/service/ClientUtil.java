@@ -11,18 +11,18 @@ public class ClientUtil {
         this.url = url;
     }
 
-    public String call(String path, JsonObject body) {
+    public HttpResponse<String> call(String path, JsonObject body, String sessionId) {
         try {
                Unirest.setTimeouts(0, 0);
             HttpResponse<String> response = Unirest.post(url + path)
                     .header("Content-Type", "application/json")
                     .body(String.valueOf(body))
                     .asString();
-            return response.getBody();
+            return response;
 
         } catch (Exception e){
             e.printStackTrace();
-            return "{}";
+            return null;
         }
     }
 }

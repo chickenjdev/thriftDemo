@@ -2,17 +2,40 @@ import React, {useState} from 'react';
 import './App.css';
 import axios from "axios";
 
-function UserForm({userInfo}) {
-    const [userInfoUpdate, setUserInfoUpdate] = useState({});
+function UserForm({userInfo, sessionIn}) {
 
-    const [state, setState] = React.useState({})
+    const [info, setInfo] = useState(userInfo)
+    const [session, setSession] = useState(sessionIn)
+    const [resultUpdate, setResultUpdate] = useState();
 
     function handleChange(evt) {
-        const value = evt.target.value;
-        setState({
-            ...state,
-            [evt.target.name]: value
+        console.log(evt.target.value)
+        setInfo({
+            ...info,
+            [evt.target.name]: evt.target.value
         });
+    }
+
+    const summitUpdate = e => {
+        const loginJson = {
+            username: info.username,
+            name: info.name,
+            address: info.address,
+            age: info.age,
+            sessionId : session.sessionId
+        }
+        console.log('username ' + loginJson)
+        const headers = {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*"
+        }
+        axios.post(`http://localhost:8089/update`, {loginJson}, {headers: headers})
+            .then(res => {
+                if (res.data.error === 0){
+                    setResultUpdate("update success");
+                }
+                setResultUpdate("update success");
+            })
     }
 
     function FormHeader() {
@@ -21,14 +44,15 @@ function UserForm({userInfo}) {
         )
     };
 
-    function Form({userInfo}) {
+    function Form() {
         return (
             <div>
-                <FormInputUserInfo name="username" value={userInfo.username} description = "username" type="text"/>
-                <FormInputUserInfo name="name" value={userInfo.name} description = "name" type="text"/>
-                <FormInputUserInfo name="address" value={userInfo.address} description = "address" type="text"/>
-                <FormInputUserInfo name="age" value={userInfo.age} description = "age" type="text"/>
+                <FormInputUserInfo name="username" value={info.username} description = "username" type="text"/>
+                <FormInputUserInfo name="name" value={info.name} description = "name" type="text"/>
+                <FormInputUserInfo name="address" value={info.address} description = "address" type="text"/>
+                <FormInputUserInfo name="age" value={info.age} description = "age" type="text"/>
                 <FormButton title="Update"/>
+                <div><p>{resultUpdate}</p></div>
                 <div className="row"></div>
             </div>
         )
@@ -39,7 +63,7 @@ function UserForm({userInfo}) {
             <div className="row">
                 <label>{description}</label>
                 <input key={name} value={value}
-                       type={type} placeholder={placeholder} onChange={handleChange}
+                       type={type} placeholder={placeholder} onChange={e => handleChange(e)}
                 />
             </div>
         )
@@ -49,7 +73,7 @@ function UserForm({userInfo}) {
     function FormButton({doSomeThing, title}) {
         return (
             <div id="button" className="row loginbutton">
-                <button>{title}</button>
+                <button onClick={summitUpdate}>{title}</button>
             </div>
         )
     }
@@ -58,7 +82,7 @@ function UserForm({userInfo}) {
         <>
             <div id="userform">
                 <FormHeader></FormHeader>
-                <Form userInfo={userInfo}/>
+                <Form/>
             </div>
         </>
     );
